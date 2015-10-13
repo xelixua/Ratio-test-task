@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html ng-app="tasksList">
+	<head>
+		<meta charset="UTF-8">
+		<title>Ratio</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+		<script src="scripts/app.js"></script>
+	</head>
+	<body>
+	    <div class="page-header container">
+	        <h4>Список задач с таймерами обратного отсчета</h4>
+	    </div>
+	   <br>
+	   <div class="row">
+	       <div class="container">
+        	   <div id="taskCreation" class="col-md-3" ng-controller="taskCreator">
+        	        <h2>Создание задачи</h2>
+        	        <input id="taskName" type="text" class="form-control" ng-model="taskCreator.TASK_NAME"/>
+        	        <input id="taskDescription" class="form-control" type="text" ng-model="taskCreator.TASK_DESCRIPTION"/>
+        	        <input id="endDate" class="form-control" type="text" ng-model="taskCreator.END_DATE"/>
+        	        <input id="endTime" class="form-control" type="text" ng-model="taskCreator.END_TIME">
+        	        <br>
+        	        <button id="create" class="btn btn-info" ng-click="createTask()">Создать</button>
+        	    </div>
+        	    <div id="tasksList" class="col-md-9" ng-controller="tasksList">
+        	        <h2>Список задач</h2>
+        	        <div class="jumbotron" ng-repeat="task in tasksList.tasks">
+        	            <p>{{task.name}}</p><br>
+        	            <p>{{task.description}}</p><br>
+        	            <p>{{task.timeLeft}}</p><br>
+        	        </div>
+        	    </div>
+    	    </div>
+	    </div>
+	</body>
+</html>

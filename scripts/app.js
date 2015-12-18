@@ -2,7 +2,7 @@
 (function () {
     var app = angular.module('tasksList', []);
     
-    app.controller('taskCreator', ["$rootScope", function(rootScope){
+    app.controller('taskCreator', ["$rootScope", function (rootScope) {
         var date = new Date(),
             self = this,
             DEFAULT_TASK_NAME = "Имя задачи",
@@ -18,7 +18,7 @@
             this.END_DATE = CURRENT_DATE;
             this.END_TIME = CURRENT_END_TIME;
             
-            rootScope.createTask = function(){
+            rootScope.createTask = function () {
                 var dateTemplate = new RegExp('^0[1-9]|[12][0-9]|3[01]/0[1-9]|1[012]/20\d\d$',''),
                     timeTemplate = new RegExp('^(((([0-1][0-9])|(2[0-3])):?[0-5][0-9])|(24:?00))$',''),
                     newTask = {},
@@ -26,12 +26,12 @@
                     timeArr,
                     taskEndDate;
                     
-                    if(self.TASK_NAME.length == 0){
+                    if(self.TASK_NAME.length == 0) {
                         alert("Задача должна иметь имя");
                         return;
                     }
                     
-                    if(self.TASK_NAME.length > 20){
+                    if(self.TASK_NAME.length > 20) {
                         alert("Длина имени задачи не может быть более 20 символов");
                         return;
                     }
@@ -59,7 +59,7 @@
                     taskEndDate.setFullYear(dateArr[2]);
 			        newTask.endDate = taskEndDate;
 			        
-			        if(taskEndDate.getTime() - new Date().getTime() < 0){
+			        if(taskEndDate.getTime() - new Date().getTime() < 0) {
 			            alert("Время окончания задачи должно быть в будущем");
 			            return;
 			        }
@@ -72,24 +72,30 @@
             };
     }]);
     
-    app.controller("tasksList", ["$rootScope", function(rootScope){
+    app.controller("tasksList", ["$rootScope", function (rootScope) {
         var tasks = [];
         
         rootScope.tasksList = this;
         this.tasks = tasks;
-        rootScope.$on("newTask", function(event, args){
+        rootScope.$on("newTask", function (event, args) {
             var newTask = args.task;
             tasks.push(newTask);
         });
 
         //update time left for tasks
-        setInterval(function(){
+        setInterval(function () {
                 var currentDate = new Date(),
                     timeLeft,
                     i = 0;
                     
-                for(; i < tasks.length; i++){
+                for(; i < tasks.length; i++) {
                     timeLeft = tasks[i].endDate.getTime() - currentDate.getTime();
+                    if(timeLeft < 0) {
+                        if(timeLeft < -5000) {
+                            tasks.splice(i, 1);
+                        }
+                        continue;
+                    }
                     tasks[i].timeLeft = "Осталось " + (timeLeft/31104000000 > 1 ? (timeLeft - timeLeft%31104000000)/31104000000 + " лет " : " ")
                                                     + (timeLeft/2592000000 > 1? (timeLeft%31104000000 -  timeLeft%2592000000)/2592000000 + " месяцев " : " " )
                                                     + (timeLeft/86400000 > 1? (timeLeft%2592000000 - timeLeft%86400000)/86400000 + " дней " : " ")
